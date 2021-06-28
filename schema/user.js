@@ -43,3 +43,10 @@ module.exports.update_password = {
         newPwd: Joi.not(Joi.ref('oldPwd')).concat(password)
     }
 }
+// 用户头像的验证规则
+const avatar = Joi.string().dataUri().required()
+module.exports.update_avatar_schema = {
+    body:{
+        avatar
+    }
+}
