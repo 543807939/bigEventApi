@@ -1,6 +1,10 @@
 const db = require('../db/index')
-// 引入bcryptj
+// 引入bcryptj加密
 const bcrypt = require('bcryptjs')
+// 引入jwt生成token
+const jwt = require('jsonwebtoken')
+// 引入config.js
+const config = require('../config/config')
 // 注册新用户的处理函数
 module.exports.registerUser = (req, res) => {
     // 获取用户提交的表单信息
@@ -48,7 +52,7 @@ module.exports.registerUser = (req, res) => {
                 //     status: 0,
                 //     message: '注册成功'
                 // })
-                res.cc('注册成功',0)
+                res.cc('注册成功', 0)
             }
         })
     })
@@ -56,5 +60,30 @@ module.exports.registerUser = (req, res) => {
 
 // 登录的处理函数
 module.exports.login = (req, res) => {
-    res.send('login OK')
+    let userInfo = req.body
+    let sqlStr = 'select * from ev_users where username = ?'
+    db.query(sqlStr, userInfo.username, (err, result) => {
+        if (err) {
+            return res.cc(err)
+        }
+        if (result.length !== 1) {
+            console.log(result.length);
+            return res.cc('账户不存在')
+        }
+        // 账户存在
+        // 判断加密后的密码和数据库的密码是否一致
+        let compareResult = bcrypt.compareSync(userInfo.password, result[0].password)
+        if (!compareResult) {
+            return res.cc('密码错误')
+        }
+        // 密码正常
+        // 获取用户信息,并将密码和头像去掉
+        let user = { ...result[0], password: '', user_pic: '' }
+        let token = jwt.sign(user, config.jwtSecretKey, { expiresIn: '10h' })
+        res.send({
+            status: 0,
+            message: '登陆成功! ',
+            token: 'Bearer ' + token
+        })
+    })
 }
