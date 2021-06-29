@@ -7,7 +7,7 @@ const userInfoHandler = require('../router_handler/userinfo')
 // 1. 导入验证表单数据的中间件
 const expressJoi = require('@escook/express-joi')
 // 2. 导入需要的验证规则对象
-const { update_userinfo, update_password,update_avatar_schema } = require('../schema/user')
+const { update_userinfo, update_password, update_avatar_schema } = require('../schema/user')
 
 // 获取用户信息
 router.get('/userinfo', userInfoHandler.getUserInfo)
@@ -19,5 +19,5 @@ router.post('/userinfo', expressJoi(update_userinfo), userInfoHandler.updateUser
 router.post('/updatepwd', expressJoi(update_password), userInfoHandler.updatePassword)
 
 // 更新用户头像
-router.post('/update/avatar',expressJoi(update_avatar_schema),userInfoHandler.updateAvater)
+router.post('/update/avatar', expressJoi(update_avatar_schema), userInfoHandler.updateAvater)
 module.exports = router

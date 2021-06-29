@@ -30,10 +30,18 @@ app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] 
 // 引入并使用user的路由模块
 const userRouter = require('./router/user')
 app.use('/api', userRouter)
+
 // 引入userInfo的路由模块
 const userinfo = require('./router/userinfo')
 app.use('/my', userinfo)
 
+// 引入artcate路由
+const artcate = require('./router/artcate')
+app.use('/my/article', artcate)
+
+// 引入article路由
+const article = require('./router/article')
+app.use('/my/article', article)
 // 引入joi
 const Joi = require('joi')
 // 定义错误级别的中间件

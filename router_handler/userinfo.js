@@ -74,6 +74,18 @@ module.exports.updatePassword = (req, res) => {
 }
 
 // 更换头像的处理函数
-module.exports.updateAvater = function(req,res){
-    
+module.exports.updateAvater = function (req, res) {
+    let sql = 'update ev_users set user_pic = ? where id = ?'
+    db.query(sql, [req.body.avatar, req.user.id], (err, result) => {
+        if (err) {
+            return res.cc(err)
+        }
+        if (result.affectedRows !== 1) {
+            return res.cc('更换用户头像失败!')
+        }
+        res.send({
+            status: 0,
+            message: '更换用户头像成功!'
+        })
+    })
 }
