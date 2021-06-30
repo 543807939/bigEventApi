@@ -6,10 +6,12 @@ const app = express()
 // 解决跨域问题 
 const cors = require('cors')
 app.use(cors())
+
 // 解析post表单数据  只能解析application/x-www-form-urlencoded格式的数据
 app.use(express.urlencoded({
     extended: false
 }))
+
 // 封装res.cc函数 作为中间件
 app.use(function (req, res, next) {
     // status 默认值为1 表示失败的情况
@@ -22,6 +24,10 @@ app.use(function (req, res, next) {
     }
     next()
 })
+
+// 托管静态资源
+app.use('/uploads', express.static('./uploads'))
+
 // 配置解析token的中间件
 const expressJWT = require('express-jwt')
 const config = require('./config/config')
